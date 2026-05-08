@@ -55,8 +55,11 @@ const ContactSection = ({ audience = "tuition" }: ContactSectionProps) => {
 
     setLoading(true);
     try {
+      const enquiryId = crypto.randomUUID();
+
       // Save to database
       const { error: dbError } = await supabase.from("enquiries").insert({
+        id: enquiryId,
         parent_name: form.parent_name,
         student_name: form.student_name,
         phone: form.phone,
@@ -68,9 +71,17 @@ const ContactSection = ({ audience = "tuition" }: ContactSectionProps) => {
       if (dbError) throw dbError;
 
       // Send email notification
-      await supabase.functions.invoke("send-enquiry-notification", {
-        body: form,
+      const { error: notificationError } = await supabase.functions.invoke("send-enquiry-notification", {
+        body: {
+          ...form,
+          enquiry_id: enquiryId,
+          audience,
+        },
       });
+
+      if (notificationError) {
+        console.error("Error sending enquiry notification:", notificationError);
+      }
 
       toast({ title: "Success!", description: "Your enquiry has been submitted. We'll get back to you within 24 hours." });
       setForm({ parent_name: "", student_name: "", phone: "", email: "", grade: "", message: "" });
