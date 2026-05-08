@@ -75,3 +75,37 @@
 html {
   scroll-behavior: smooth;
 }
+
+.school-page {
+  --background: 263 88% 97%;
+  --foreground: 264 45% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 264 45% 18%;
+  --primary: 267 72% 48%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 158 52% 42%;
+  --accent-foreground: 0 0% 100%;
+  --muted: 264 35% 94%;
+  --muted-foreground: 264 18% 43%;
+  --border: 265 35% 88%;
+  --ring: 267 72% 48%;
+}
+
+.school-float {
+  animation: school-float 4s ease-in-out infinite;
+}
+
+.school-float-delayed {
+  animation: school-float 4.8s ease-in-out 0.6s infinite;
+}
+
+@keyframes school-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-1deg);
+  }
+
+  50% {
+    transform: translateY(-14px) rotate(2deg);
+  }
+}

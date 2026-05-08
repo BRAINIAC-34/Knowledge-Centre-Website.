@@ -11,9 +11,32 @@ const PHONE_NUMBER = "+919405543053";
 const WHATSAPP_URL = "https://wa.me/919405543053";
 const EMAIL = "info@knowledgecentre.online";
 
-const ContactSection = () => {
+type ContactSectionProps = {
+  audience?: "tuition" | "school";
+};
+
+const tuitionGrades = [
+  "8th Grade",
+  "9th Grade",
+  "10th Grade",
+  "11th Commerce",
+  "12th Commerce",
+  "Vedic Maths Only",
+];
+
+const schoolPrograms = [
+  "School - Playgroup",
+  "School - Nursery",
+  "School - Junior KG",
+  "School - Senior KG",
+  "School - Admission Enquiry",
+];
+
+const ContactSection = ({ audience = "tuition" }: ContactSectionProps) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const isSchool = audience === "school";
+  const options = isSchool ? schoolPrograms : tuitionGrades;
   const [form, setForm] = useState({
     parent_name: "",
     student_name: "",
@@ -65,10 +88,12 @@ const ContactSection = () => {
         <div className="text-center mb-12">
           <span className="text-primary font-semibold text-sm uppercase tracking-wider">Get In Touch</span>
           <h2 className="font-heading text-3xl md:text-4xl font-extrabold text-foreground mt-2 mb-4">
-            Book Your Free Demo Class
+            {isSchool ? "Enquire About Preschool Admissions" : "Book Your Free Demo Class"}
           </h2>
           <p className="text-muted-foreground">
-            Take the first step towards academic excellence. Fill in your details and we'll get back to you within 24 hours.
+            {isSchool
+              ? "Share your details and we'll help you with programs, visits, and admission next steps."
+              : "Take the first step towards academic excellence. Fill in your details and we'll get back to you within 24 hours."}
           </p>
         </div>
 
@@ -115,18 +140,17 @@ const ContactSection = () => {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground mb-1 block">Select Grade *</label>
+                <label className="text-sm font-medium text-foreground mb-1 block">{isSchool ? "Select Program *" : "Select Grade *"}</label>
                 <Select value={form.grade} onValueChange={(val) => setForm({ ...form, grade: val })}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select student's grade" />
+                    <SelectValue placeholder={isSchool ? "Select preschool program" : "Select student's grade"} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="8th Grade">8th Grade</SelectItem>
-                    <SelectItem value="9th Grade">9th Grade</SelectItem>
-                    <SelectItem value="10th Grade">10th Grade</SelectItem>
-                    <SelectItem value="11th Commerce">11th Commerce</SelectItem>
-                    <SelectItem value="12th Commerce">12th Commerce</SelectItem>
-                    <SelectItem value="Vedic Maths Only">Vedic Maths Only</SelectItem>
+                    {options.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option.replace("School - ", "")}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -150,9 +174,9 @@ const ContactSection = () => {
             <div className="bg-background rounded-xl p-6 border border-border">
               <div className="flex items-center gap-3 mb-2">
                 <Monitor className="w-5 h-5 text-primary" />
-                <h4 className="font-heading font-bold text-foreground">Platform</h4>
+                <h4 className="font-heading font-bold text-foreground">{isSchool ? "Preschool" : "Platform"}</h4>
               </div>
-              <p className="text-muted-foreground">Online Live Classes</p>
+              <p className="text-muted-foreground">{isSchool ? "Playgroup, Nursery, Junior KG & Senior KG" : "Online Live Classes"}</p>
             </div>
 
             <div className="bg-background rounded-xl p-6 border border-border">
@@ -174,9 +198,9 @@ const ContactSection = () => {
             <div className="bg-background rounded-xl p-6 border border-border">
               <div className="flex items-center gap-3 mb-2">
                 <Clock className="w-5 h-5 text-primary" />
-                <h4 className="font-heading font-bold text-foreground">Class Hours</h4>
+                <h4 className="font-heading font-bold text-foreground">{isSchool ? "School Enquiry Hours" : "Class Hours"}</h4>
               </div>
-              <p className="text-muted-foreground">Mon - Sat: 7:00 AM - 9:00 PM</p>
+              <p className="text-muted-foreground">{isSchool ? "Mon - Sat: 9:00 AM - 5:00 PM" : "Mon - Sat: 7:00 AM - 9:00 PM"}</p>
             </div>
 
             <div className="bg-background rounded-xl p-6 border border-border">
@@ -191,14 +215,18 @@ const ContactSection = () => {
             </div>
 
             <div className="bg-accent/10 rounded-xl p-6 border border-accent/20">
-              <h4 className="font-heading font-bold text-foreground mb-2">100% Online Classes</h4>
+              <h4 className="font-heading font-bold text-foreground mb-2">{isSchool ? "Visit & Admission Support" : "100% Online Classes"}</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Join our live interactive classes from anywhere in India. All you need is a smartphone/laptop and internet connection. No travel required!
+                {isSchool
+                  ? "Ask about age criteria, program fit, school visits, and admission availability for your child."
+                  : "Join our live interactive classes from anywhere in India. All you need is a smartphone/laptop and internet connection. No travel required!"}
               </p>
               <div className="flex gap-2">
-                <span className="bg-accent/20 text-accent text-xs font-medium px-3 py-1 rounded-full">Live Classes</span>
-                <span className="bg-accent/20 text-accent text-xs font-medium px-3 py-1 rounded-full">Recorded Sessions</span>
-                <span className="bg-accent/20 text-accent text-xs font-medium px-3 py-1 rounded-full">24/7 Support</span>
+                {(isSchool ? ["Admissions", "School Visit", "Parent Guidance"] : ["Live Classes", "Recorded Sessions", "24/7 Support"]).map((item) => (
+                  <span key={item} className="bg-accent/20 text-accent text-xs font-medium px-3 py-1 rounded-full">
+                    {item}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
